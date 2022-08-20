@@ -3,6 +3,8 @@ package game2048;
 import java.util.Formatter;
 import java.util.Observable;
 
+import org.w3c.dom.events.MouseEvent;
+
 
 /** The state of a game of 2048.
  *  @author TODO: YOUR NAME HERE
@@ -110,7 +112,15 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
+        board.setViewingPerspective(side);
         // TODO: Modify this.board (and perhaps this.score) to account
+        for (int i = 0; i < board.size();i++){
+            if (helper1(i)){
+                changed = true;
+            }
+        }
+         board.setViewingPerspective(Side.NORTH);
+
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
 
@@ -120,6 +130,47 @@ public class Model extends Observable {
         }
         return changed;
     }
+
+    public boolean helper1(int i){
+        boolean flaghelp1 = false;
+        int thin = board.size();
+        for (int j = board.size() - 2;j>=0;j--){
+            Tile t = board.tile(i,j);
+            if (t != null){
+                int tmp =helper2(i,j,thin);
+
+                if (tmp != j){  
+                    if (board.tile(i,tmp) != null){
+                        board.move(i,tmp,t);
+                        flaghelp1 = true;
+                        score += board.tile(i,tmp).value();
+                        thin = tmp;
+                    }else{
+                        board.move(i,tmp,t);
+                        flaghelp1 = true;
+                    }
+
+                }
+            }
+        }
+        return flaghelp1;
+    }
+    
+    public int helper2(int i,int j,int thin){
+        int sofar = j;
+        while ( j+1 < thin){
+            if (board.tile(i,j+1) == null ){
+                j += 1;
+            }
+            else if (board.tile(i,j+1).value() == board.tile(i,sofar).value()){
+                    return j+1;
+                }
+            else{return j;}   
+        }
+        return j;
+
+    }
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -138,6 +189,19 @@ public class Model extends Observable {
      * */
     public static boolean emptySpaceExists(Board b) {
         // TODO: Fill in this function.
+        for (int i = 0 ; i < b.size() ; i++){
+            for (int j = 0; j < b.size(); j++){
+                if (b.tile(i,j) == null ){
+                    return true;
+                }
+            }
+        }
+    //    for (Tile tile : b) {
+    //        if (tile == null) {
+    //            return true;
+    //        }
+    //    }
+
         return false;
     }
 
@@ -148,6 +212,18 @@ public class Model extends Observable {
      */
     public static boolean maxTileExists(Board b) {
         // TODO: Fill in this function.
+        for (int i = 0 ; i < b.size() ; i++){
+            for (int j = 0; j < b.size(); j++){
+                if (b.tile(i,j) == null){
+                    continue;
+                }
+
+                if (b.tile(i,j).value() == MAX_PIECE ){
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
@@ -159,6 +235,51 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        if(emptySpaceExists(b) || maxTileExists(b)){
+            return true;
+        }
+        else{
+            for (int i = 0 ; i < b.size() ; i++){
+                for (int j = 0; j < b.size(); j++){
+                    if (judgecol(b, b.tile(i,j).value() , i, j) || judgerow(b,b.tile(i,j).value(), i, j)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean judgerow (Board b,int sofar ,int i ,int j){
+        if (i == 0){
+            if (b.tile(i+1,j).value() == sofar){
+                return true;
+            }
+        }else if(i == b.size() - 1 ){
+            if (b.tile(i-1,j).value() == sofar){
+                return true;
+            }
+        }else{
+            if (b.tile(i+1,j).value() ==sofar || b.tile(i-1,j).value() == sofar){
+                return true;
+            }
+        }
+        return false;
+    }
+    public static boolean judgecol (Board b,int sofar,int i, int j){
+        if (j == 0){
+            if (b.tile(i,j+1).value() == sofar){
+                return true;
+            }
+        }else if(j == b.size() - 1 ){
+            if (b.tile(i,j-1).value() == sofar){
+                return true;
+            }
+        }else{
+            if (b.tile(i,j+1).value() ==sofar || b.tile(i,j-1).value() == sofar){
+                return true;
+            }
+        }
         return false;
     }
 
