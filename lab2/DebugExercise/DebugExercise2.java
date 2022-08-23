@@ -16,6 +16,14 @@ public class DebugExercise2 {
 //        return max;
 //    }
 
+    public static int max(int a, int b) {
+        if (a > b){
+            return a;
+        }
+        return b;
+
+    }
+
 
     /** Returns the sum of a and b. Do not step into this function. */
     public static int add(int a, int b) {
@@ -47,11 +55,8 @@ public class DebugExercise2 {
         int[] returnArray = new int[a.length];
         for (int i = 0; i < a.length; i += 1) {
 //            int biggerValue = max(a[i], b[i]);
-            if (a[i] > b[i]){
-                returnArray[i] = a[i];
-            }else{
-                returnArray[i] = b[i];
-            }
+            returnArray[i] = DebugExercise2.max(a[i],b[i]);
+
         }
 
         return returnArray;
@@ -74,11 +79,11 @@ public class DebugExercise2 {
      * */
     public static int sumOfElementwiseMaxes(int[] a, int[] b) {
         int[] maxes = arrayMax(a, b);
-        int sumofMaxes = mysum(maxes);
+        int sumofMaxes = arraySum(maxes);
         return sumofMaxes;
     }
 
-    public static int mysum(int[] x) {
+    public static int arraySum(int[] x) {
         int sum = 0;
         for (int i=0;i<x.length ; i++){
             sum += x[i];
