@@ -6,15 +6,15 @@ package DebugExercise;
  */
 public class DebugExercise2 {
     /** Returns the max of a and b. Do not step into this function. */
-    public static int max(int a, int b) {
-        int w = (b - a) >> 31;
-        /* If you're stepping into this function, click the
-           step out button because you're not going to learn anything. */
-        int z = ~(b - a) >> 31;
-
-        int max = b & w | a & z;
-        return max;
-    }
+//    public static int max(int a, int b) {
+//        int w = (b - a) >> 31;
+//        /* If you're stepping into this function, click the
+//           step out button because you're not going to learn anything. */
+//        int z = ~(b - a) >> 31;
+//
+//        int max = b & w | a & z;
+//        return max;
+//    }
 
 
     /** Returns the sum of a and b. Do not step into this function. */
@@ -46,23 +46,27 @@ public class DebugExercise2 {
         }
         int[] returnArray = new int[a.length];
         for (int i = 0; i < a.length; i += 1) {
-            int biggerValue = max(a[i], b[i]);
-            returnArray[i] = biggerValue;
+//            int biggerValue = max(a[i], b[i]);
+            if (a[i] > b[i]){
+                returnArray[i] = a[i];
+            }else{
+                returnArray[i] = b[i];
+            }
         }
 
         return returnArray;
     }
 
     /** Returns the sum of all elements in x. */
-    public static int arraySum(int[] x) {
-        int i = 0;
-        int sum = 0;
-        while (i < x.length) {
-            sum = sum + add(sum, x[i]);
-            i = i + 1;
-        }
-        return sum;
-    }
+//    public static int arraySum(int[] x) {
+//        int i = 0;
+//        int sum = 0;
+//        while (i < x.length) {
+//            sum = sum + add(sum, x[i]);
+//            i = i + 1;
+//        }
+//        return sum;
+//    }
 
     /** Returns the sum of the element-wise max of a and b.
      *  For example if a = {2, 0, 10, 14} and b = {-5, 5, 20, 30},
@@ -70,8 +74,16 @@ public class DebugExercise2 {
      * */
     public static int sumOfElementwiseMaxes(int[] a, int[] b) {
         int[] maxes = arrayMax(a, b);
-        int sumofMaxes = arraySum(maxes);
+        int sumofMaxes = mysum(maxes);
         return sumofMaxes;
+    }
+
+    public static int mysum(int[] x) {
+        int sum = 0;
+        for (int i=0;i<x.length ; i++){
+            sum += x[i];
+        }
+        return sum;
     }
 
 
