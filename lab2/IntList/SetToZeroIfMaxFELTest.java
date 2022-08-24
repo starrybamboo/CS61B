@@ -26,3 +26,5 @@ public class SetToZeroIfMaxFELTest {
         assertEquals("0 -> 0 -> 35 -> 0 -> 10 -> 0", L.toString());
     }
 }
+
+
