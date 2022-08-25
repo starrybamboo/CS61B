@@ -49,7 +49,7 @@ public class TestBuggyAList {
         }
     }
     @Test
-    public void ICopyTeachersTest(){
+    public void randomizedTest (){
         AListNoResizing<Integer> tmp = new AListNoResizing<>();
         BuggyAList<Integer> tmp2 = new BuggyAList<>();
         for (int i =1 ; i<5000;i++){
