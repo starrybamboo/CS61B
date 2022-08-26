@@ -1,5 +1,10 @@
 package deque;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class ArrayDeque<Item> {
     private int size;
     private int begin;
@@ -143,4 +148,34 @@ public class ArrayDeque<Item> {
         System.out.println();
     }
 
+    public Item ger(int i){
+        if (i > test.length){
+            return null;
+        }
+        return test[i];
+    }
+
+    public class ArrayDequeTest {
+        @Test
+        public void AddEmptySizeTest() {
+            ArrayDeque<String> lld1 = new ArrayDeque<>();
+            assertTrue("A newly initialized LLDeque should be empty", lld1.isEmpty());
+
+            lld1.addFirst("11");
+            assertEquals(1, lld1.size());
+            lld1.removeFirst();
+            assertEquals(0, lld1.size());
+            assertTrue("lld1 should now contain 1 item", lld1.isEmpty());
+
+            lld1.addFirst("11");
+            lld1.addLast("middle");
+            assertEquals(2, lld1.size());
+
+            lld1.addLast("back");
+            assertEquals(3, lld1.size());
+
+            System.out.println("Printing out deque: ");
+            lld1.printDeque();
+        }
+    }
 }
