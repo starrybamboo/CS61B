@@ -148,7 +148,7 @@ public class ArrayDeque<Item> {
         System.out.println();
     }
 
-    public Item ger(int i){
+    public Item get(int i){
         if (i > test.length){
             return null;
         }
