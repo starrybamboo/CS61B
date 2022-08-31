@@ -132,5 +132,22 @@ public class ArrayDequeTest {
 
 
     }
+    @Test
+    public void bigLLDequeTest2() {
+
+//        System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
+
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        for (int i = 0; i < 100; i++) {
+            lld1.addFirst(i);
+        }
+
+        for (int i = 99; i >= 0; i--){
+            assertEquals("should have same value",i,(int)lld1.removeFirst());
+        }
+
+
+
+    }
 
 }

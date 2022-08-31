@@ -14,7 +14,7 @@ public class ArrayDeque <T> implements Iterable<T>{
     }
 
     public void addFirst(T value){
-        if (size == array.length - 1){
+        if (size == array.length - 2){
             this.resize(size*2);
         }
         array[begin] = value;
@@ -85,8 +85,8 @@ public class ArrayDeque <T> implements Iterable<T>{
             for (int i = 0;i < begin - end - 1; i++){
                 a[capacity - i - 1] = a[begin - i - 1];
             }
-            begin = 0;
             end = capacity - (begin - end);
+            begin = 0;
         }
         array = a;
     }
