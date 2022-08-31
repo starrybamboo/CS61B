@@ -2,9 +2,6 @@ package deque;
 import java.util.Iterator;
 
 
-
-//TODO: 这里的循环比较应该有较大的优化的余地，我一个写一个方法来减少他们的冗余性，我写的这个实在是太他妈丑了！！！还有这两个奇怪的取名！
-
 public class ArrayDeque <T> implements Iterable<T>{
     private int size, begin, end;
 
@@ -118,7 +115,7 @@ public class ArrayDeque <T> implements Iterable<T>{
             if (i < begin){
                 return array[begin - i - 1];
             }else {
-                return array[array.length - (begin - i - 1)];
+                return array[array.length - (i - begin) - 1];
             }
         }else{
             return array[begin - i - 1];
