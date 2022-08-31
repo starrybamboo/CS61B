@@ -149,7 +149,7 @@ public class ArrayDeque<Item> {
     }
 
     public Item get(int i){
-        if (i > test.length){
+        if (i >= test.length){
             return null;
         }
         return test[i];
