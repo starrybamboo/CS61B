@@ -18,6 +18,16 @@ public class LinkedListDeque<Item> {
         sentinel = new Node(null);
     }
 
+//    public Item getRecursive (int index){
+//        if (index == 0){
+//            return this.value;
+//        }else if (this.next == null){
+//            return null;
+//        } else{
+//            return this.next.getRecursive(index - 1);
+//        }
+//    }
+
     public boolean isEmpty(){
         if(size == 0){
             return true;
