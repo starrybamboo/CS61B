@@ -2,7 +2,7 @@ package deque;
 import java.util.Iterator;
 
 
-public class ArrayDeque <T> implements Iterable<T>{
+public class ArrayDeque <T> implements Iterable<T> ,Deque<T>{
     private int size, begin, end;
 
     private T[] array = (T[]) new Object[8];
@@ -66,9 +66,9 @@ public class ArrayDeque <T> implements Iterable<T>{
         return size;
     }
 
-    public boolean isEmpty(){
-        return (size == 0);
-    }
+//    public boolean isEmpty(){
+//        return (size == 0);
+//    }
 
     public void resize(int capacity){
         T[] a = (T[]) new Object[capacity];
