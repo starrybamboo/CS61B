@@ -47,6 +47,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         this.buckets = createTable(initialSize);
         this.loadFactor = 0.75;
         this.length = initialSize;
+        this.keySet = new HashSet<>();
     }
 
     /**
@@ -61,6 +62,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         this.buckets = createTable(initialSize);
         this.loadFactor = maxLoad;
         this.length = initialSize;
+        this.keySet = new HashSet<>();
     }
 
     /**
@@ -109,7 +111,6 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return tmp;
     }
 
-    // TODO: Implement the methods of the Map61B Interface below
     // Your code won't compile until you do so!
 
     @Override
@@ -128,7 +129,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return false;
     }
 
-    public Node find(K key){
+    private Node find(K key){
         int tmp = key.hashCode() % this.length;
         if (tmp < 0){
             tmp = -tmp;
@@ -216,7 +217,8 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
             if (tmp < 0) {
                 tmp = -tmp;
             }
-            buckets[tmp].remove(a);
+            this.buckets[tmp].remove(a);
+            this.keySet.remove(a);
             return value;
         }
         return null;
