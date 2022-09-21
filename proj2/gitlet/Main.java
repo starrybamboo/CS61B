@@ -13,12 +13,22 @@ public class Main {
         String firstArg = args[0];
         switch(firstArg) {
             case "init":
+                Repository.init();
                 // TODO: handle the `init` command
                 break;
             case "add":
+                Repository.add(args[1]);
                 // TODO: handle the `add [filename]` command
                 break;
             // TODO: FILL THE REST IN
+            case "":
+                System.out.println("Please enter a command.");
+                break;
+            case "commit":
+                Repository.commit(args[1]);
+                break;
+            default:
+                System.out.println("No command with that name exists.");
         }
     }
 }
