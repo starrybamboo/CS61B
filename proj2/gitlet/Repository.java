@@ -1,10 +1,6 @@
 package gitlet;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 import static gitlet.Utils.*;
@@ -30,8 +26,6 @@ public class Repository {
     public static final File CWD = new File(System.getProperty("user.dir"));
     /** The .gitlet directory. */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
-    public Stage MAP;
-    private Branch HeadPointer;
 
 
     static void init(){
@@ -40,37 +34,41 @@ public class Repository {
         }else{
             GITLET_DIR.mkdir();
             buildFolder();
-            Commit sentinel = new Commit("initial commit",null);
-            Branch master = new Branch(sentinel,"master");
-            writeObject(join(GITLET_DIR,"HeadPointer"),master);
-            Stage MAP = new Stage();
+            buildInitialThing();
         }
     }
 
     static void buildFolder(){
-        File tmp1 = join(GITLET_DIR,"StageRemove");
-        tmp1.mkdir();
-        File tmp2 = join(GITLET_DIR,"StageAdd");
-        tmp2.mkdir();
-        File tmp3 = join(GITLET_DIR,"Blobs");
-        tmp3.mkdir();
-        File tmp4 = join(GITLET_DIR,"Commit");
-        tmp4.mkdir();
-        File tmp5 = join(GITLET_DIR,"Repo");
-        tmp5.mkdir();
+        join(GITLET_DIR,"OBJECT").mkdir();
+        join(GITLET_DIR,"OBJECT","Blobs").mkdir();
+        join(GITLET_DIR, "OBJECT","Commit").mkdir();
+        join(GITLET_DIR,"Ref").mkdir();
+        join(GITLET_DIR,"Stage").mkdir();
+    }
+
+    static void buildInitialThing(){
+        Commit sentinel = new Commit("initial commit",null,null);
+        writeContents(join(GITLET_DIR,"OBJECT","sentinel"),sentinel);
+        Branch master = new Branch(sentinel,"master");
+        writeContents(join(GITLET_DIR,"Ref","HEAD"),master);
+        writeContents(join(GITLET_DIR,"Ref","HEAD"),master);
+        writeContents(join(GITLET_DIR,"Stage","MAPad"),null);
+        writeContents(join(GITLET_DIR,"Stage","MAPrm"),null);
     }
 
      static void add(String fileName){
-        File tmp = join(CWD,fileName);
-        if (!tmp.exists()){
-            System.out.println("File does not exist.");
-        }else{
-            Stage.checkAdd(tmp, fileName);
-        }
+//        File tmp = join(CWD,fileName);
+//        if (!tmp.exists()){
+//            System.out.println("File does not exist.");
+//        }else{
+//            Stage.checkAdd(tmp, fileName);
+//        }
     }
 
     static void commit(String msg){
-        Commit.add(msg);
+        Branch HEAD = readObject(join(GITLET_DIR,"Ref","HEAD"),Branch.class);
+        TreeMap parentBlobIDMap = readObject(join(GITLET_DIR,"Stage","MAPad"),TreeMap.class);
+        new Commit(msg, HEAD.getPointer(), parentBlobIDMap);
     }
 
     public void rm(){

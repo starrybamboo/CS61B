@@ -8,13 +8,17 @@ import static gitlet.Utils.writeContents;
 
 public class Branch implements Serializable {
     private Commit pointer;
-    public Branch(Commit tmp,String name){
-        this.pointer = tmp;
-        File f = join(Repository.GITLET_DIR,name);
-        writeContents(f,tmp);
+    private String name;
+    public Branch(Commit buildPlace,String name){
+        this.pointer = buildPlace;
+        this.name = name;
+        File f = join(Repository.GITLET_DIR,"Ref",name);
+        writeContents(f,buildPlace);
     }
 
-    public Commit get(){
+    public Commit getPointer(){
         return this.pointer;
     }
+
+    public String getName(){return this.name;}
 }
