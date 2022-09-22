@@ -27,9 +27,8 @@ public class Repository {
     /** The .gitlet directory. */
     public static final File GITLET_DIR = join(CWD, ".gitlet");
 
-
     static void init(){
-        if (!GITLET_DIR.exists()){
+        if (GITLET_DIR.exists()){
             System.out.println("A Gitlet version-control system already exists in the current directory.");
         }else{
             GITLET_DIR.mkdir();
@@ -56,13 +55,22 @@ public class Repository {
         writeContents(join(GITLET_DIR,"Stage","MAPrm"),null);
     }
 
-     static void add(String fileName){
-//        File tmp = join(CWD,fileName);
-//        if (!tmp.exists()){
-//            System.out.println("File does not exist.");
-//        }else{
-//            Stage.checkAdd(tmp, fileName);
-//        }
+    static void add(String fileName){
+        byte[] addFile = readContents(join(CWD,fileName));
+        Blobs theFile =new Blobs(fileName,addFile);
+        String theFileName = theFile.getVersion()
+
+        TreeMap addStage = Stage.getAddStage();
+
+        if (addStage.containsKey(fileName)){
+            if (theFileName == (String) addStage.get(fileName)){
+            }else{
+                addStage.remove(fileName);
+                addStage.put(fileName,theFileName);
+            }
+        }else{
+            addStage.put(fileName,theFileName);
+        }
     }
 
     static void commit(String msg){

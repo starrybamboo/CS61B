@@ -6,7 +6,7 @@ import static gitlet.Utils.readContents;
 import static gitlet.Utils.sha1;
 
 public class Calculate {
-    public static String Sha(String fileName, File tmp){
-        return sha1(fileName + readContents(tmp));
+    public static String Sha(String fileName, byte[] tmp){
+        return sha1(fileName + tmp);
     }
 }
