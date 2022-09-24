@@ -4,11 +4,11 @@ package gitlet;
 
 import java.io.File;
 import java.io.Serializable;
-import java.util.Date; // TODO: You'll likely use this in this class
-import java.util.TreeMap;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static gitlet.Repository.GITLET_DIR;
-import static gitlet.Repository.add;
 import static gitlet.Utils.*;
 
 
@@ -18,7 +18,7 @@ import static gitlet.Utils.*;
  *
  *  @author TODO
  */
-public class Commit implements Serializable,IOinterface{
+public class Commit implements Serializable {
     /**
      * TODO: add instance variables here.
      *
@@ -27,63 +27,130 @@ public class Commit implements Serializable,IOinterface{
      * variable is used. We've provided one example for `message`.
      */
 
-    /** The message of this Commit. */
+    /**
+     * The message of this Commit.
+     */
     private String message;
     private Date timestamp;
-    public String parent1;
-    public String parent2;
+    public List<String> parent;
     private String CommitID;
-    private TreeMap BlobIDMap;
-    public Commit  (String msg, Commit parent, TreeMap parentBlobIDMap){
-        if (parent == null) {
-            this.timestamp = new Date(0);
-        }else{
-            this.timestamp = new Date();
-        }
+    private TreeMap<String,String> BlobIDMap;
+
+    public Commit() {
+        this.timestamp = new Date(0);
+        this.message = "initial commit";
+        this.parent = new ArrayList<>();
+        this.BlobIDMap = new TreeMap<String,String>();
+        this.CommitID = sha1(dateToTimeStamp(timestamp),message);
+        File saveFile = join(Repository.COMMIT, this.CommitID);
+        writeObject(saveFile,this);
+    }
+    public Commit(String msg,String parents, TreeMap parentBlobIDMap){
+        this.timestamp = new Date();
         this.message = msg;
-        this.parent1 = parent.CommitID;
-        this.parent2 = null;
-        this.helpBuildBlob(parentBlobIDMap);
-        this.helpBuild();
+        this.parent = new ArrayList(2);
+        this.parent.add(parents);
+        this.BlobIDMap = parentBlobIDMap;
+        this.CommitID = generateID();
     }
 
-    public void helpBuild(){
-        this.CommitID =sha1(this);
-        File CommitFile = join(GITLET_DIR,"OBJECT","Commit", this.CommitID);
-        writeContents(CommitFile,this);
+    private static String dateToTimeStamp(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.US);
+        return dateFormat.format(date);
     }
 
-    public void helpBuildBlob(TreeMap<String,String> parentBlobIDMap){
-        if (parentBlobIDMap != null){
-            this.BlobIDMap =  parentBlobIDMap;
-            //结合暂存区的add与remove，操作
-            TreeMap addStage = Stage.getAddStage();
-            for (Object file :addStage.keySet()){
-                if (this.BlobIDMap.containsKey(file)){
-                    Object addVersion = addStage.get(file);
-                    if (this.BlobIDMap.get(file).equals(addVersion)){
-                        ;
-                    }else{
-                        this.BlobIDMap.remove(file);
-                        this.BlobIDMap.put(file,addVersion);
-                    }
-                }
+
+
+    public void updateMap(TreeMap<String,String> MAPad,TreeMap<String,String> MAPrm){
+        for(String x: MAPad.keySet() ){
+            if (this.BlobIDMap.get(x) == null){
+                this.BlobIDMap.put(x, MAPad.get(x));
+                continue;
             }
-            Stage.clearAD();
-            //处理remove缓冲区
-            TreeMap rmStage = Stage.getRemoveStage();
-            rmStage.keySet();
-            for (Object file :rmStage.keySet()){
-                if (this.BlobIDMap.containsKey(file)){
-                    Object rmVersion = rmStage.get(file);
-                    if (this.BlobIDMap.get(file).equals(rmVersion)){
-                        this.BlobIDMap.remove(file);
-                    }
-                }
+            if (!this.BlobIDMap.get(x).equals(MAPad.get(x))) {
+                this.BlobIDMap.remove(x);
+                this.BlobIDMap.put(x, MAPad.get(x));
             }
-            Stage.clearRM();
+
+        }
+        for(String x: MAPrm.keySet() ){
+            if (this.BlobIDMap.get(x) != null){
+                this.BlobIDMap.remove(x);
+                continue;
+            }
+//            if (!this.BlobIDMap.get(x).equals(MAPrm.get(x))){
+//                this.BlobIDMap.remove(x);
+//            }
         }
     }
+
+
+    public void save() {
+        File saveFile = join(Repository.COMMIT, this.CommitID);
+        writeObject(saveFile,this);
+    }
+
+    public String getID(){
+        return this.CommitID;
+    }
+    public TreeMap<String,String> getBlobIDMap(){
+        return this.BlobIDMap;
+    }
+    private String generateID() {
+        return Utils.sha1(dateToTimeStamp(timestamp), message, parent.toString(), BlobIDMap.toString());
+    }
+    public String getParent(){
+        if (this.parent.isEmpty()){return null;}
+        return this.parent.get(0);
+    }
+    public String getDate(){
+        return dateToTimeStamp(this.timestamp);
+    }
+
+    public String getMessage(){
+        return this.message;
+    }
+
+
+
+
+}
+
+//
+//    public void helpBuild(){
+//        this.CommitID =sha1(this);
+//        File CommitFile = join(GITLET_DIR,"OBJECT","Commit", this.CommitID);
+//        writeContents(CommitFile,this);
+
+//    public void helpBuildBlob(TreeMap<String,String> parentBlobIDMap){
+//        if (parentBlobIDMap != null){
+//            this.BlobIDMap =  parentBlobIDMap;
+//            TreeMap addStage = Stage.getAddStage();
+//            for (Object file :addStage.keySet()){
+//                if (this.BlobIDMap.containsKey(file)){
+//                    Object addVersion = addStage.get(file);
+//                    if (this.BlobIDMap.get(file).equals(addVersion)){
+//                        ;
+//                    }else{
+//                        this.BlobIDMap.remove(file);
+//                        this.BlobIDMap.put(file,addVersion);
+//                    }
+//                }
+//            }
+//            Stage.clearAD();
+//            TreeMap rmStage = Stage.getRemoveStage();
+//            rmStage.keySet();
+//            for (Object file :rmStage.keySet()){
+//                if (this.BlobIDMap.containsKey(file)){
+//                    Object rmVersion = rmStage.get(file);
+//                    if (this.BlobIDMap.get(file).equals(rmVersion)){
+//                        this.BlobIDMap.remove(file);
+//                    }
+//                }
+//            }
+//            Stage.clearRM();
+//        }
+//    }
 
 
 
@@ -94,10 +161,6 @@ public class Commit implements Serializable,IOinterface{
 //    }
 
 
-    @Override
-    public int attribute() {
-        return 1;
-    }
+
 
     /* TODO: fill in the rest of this class. */
-}

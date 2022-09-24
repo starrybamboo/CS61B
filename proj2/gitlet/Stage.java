@@ -9,21 +9,65 @@ import static gitlet.Utils.*;
 import static gitlet.Utils.readContents;
 
 public class Stage implements Serializable {
-    public static TreeMap getAddStage(){
-        return readObject(join(GITLET_DIR,"Stage","MAPad"), TreeMap.class);
+    public String name;
+    public TreeMap<String,String> MAP;
+    public void save(){
+        File saveFile = join(Repository.STAGE,this.name);
+        writeObject(saveFile,this);
     }
 
-    public static TreeMap getRemoveStage(){
-        return readObject(join(GITLET_DIR,"Stage","MAPrm"), TreeMap.class);
+    Stage(String name){
+        this.name = name;
+        this.MAP = new TreeMap<String,String>();
     }
 
-    public static void clearAD(){
-        writeContents(join(GITLET_DIR,"Stage","MAPad"),null);
+    public void addElement(String name, String currentVersion){
+        if (!this.MAP.containsKey(name)){
+                this.MAP.put(name,currentVersion);
+                this.save();
+        }
+        String stageVersion = this.MAP.get(name);
+        if (!currentVersion.equals(stageVersion)){
+            this.MAP.remove(name);
+            this.MAP.put(name,currentVersion);
+            this.save();
+        }
     }
 
-    public static void clearRM(){
-        writeContents(join(GITLET_DIR,"Stage","MAPrm"),null);
+    public void removeElement(String name){
+        if (this.MAP.get(name) != null){
+            this.MAP.remove(name);
+            this.save();
+        }
     }
+
+    public void clear(){
+        this.MAP = new TreeMap<String,String>();
+        this.save();
+    }
+
+    public Boolean containsKey(String FileName){
+        return this.MAP.containsKey(FileName);
+    }
+
+
+
+
+//    public static TreeMap getAddStage(){
+//        return readObject(join(GITLET_DIR,"Stage","MAPad"), TreeMap.class);
+//    }
+//
+//    public static TreeMap getRemoveStage(){
+//        return readObject(join(GITLET_DIR,"Stage","MAPrm"), TreeMap.class);
+//    }
+
+//    public static void clearAD(){
+//        writeContents(join(GITLET_DIR,"Stage","MAPad"),"");
+//    }
+//
+//    public static void clearRM(){
+//        writeContents(join(GITLET_DIR,"Stage","MAPrm"),"");
+//    }
 
 
 //    private TreeMap<String,String> AdditionMap = new TreeMap<String,String>();
