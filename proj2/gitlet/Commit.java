@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static gitlet.Repository.COMMIT;
 import static gitlet.Repository.GITLET_DIR;
 import static gitlet.Utils.*;
 
@@ -42,9 +43,10 @@ public class Commit implements Serializable {
         this.parent = new ArrayList<>();
         this.BlobIDMap = new TreeMap<String,String>();
         this.CommitID = sha1(dateToTimeStamp(timestamp),message);
-        File saveFile = join(Repository.COMMIT, this.CommitID);
+        File saveFile = join(COMMIT, this.CommitID);
         writeObject(saveFile,this);
     }
+    //parents prev commit node
     public Commit(String msg,String parents, TreeMap parentBlobIDMap){
         this.timestamp = new Date();
         this.message = msg;
@@ -54,26 +56,27 @@ public class Commit implements Serializable {
         this.CommitID = generateID();
     }
 
+
     private static String dateToTimeStamp(Date date) {
         DateFormat dateFormat = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy Z", Locale.US);
         return dateFormat.format(date);
     }
 
-
-
     public void updateMap(TreeMap<String,String> MAPad,TreeMap<String,String> MAPrm){
         for(String x: MAPad.keySet() ){
+            // if there is no file add
             if (this.BlobIDMap.get(x) == null){
                 this.BlobIDMap.put(x, MAPad.get(x));
                 continue;
             }
+            // if version is not eaqula change
             if (!this.BlobIDMap.get(x).equals(MAPad.get(x))) {
                 this.BlobIDMap.remove(x);
                 this.BlobIDMap.put(x, MAPad.get(x));
             }
-
         }
         for(String x: MAPrm.keySet() ){
+            //if removeStage's remove map has something to remove ,remove.
             if (this.BlobIDMap.get(x) != null){
                 this.BlobIDMap.remove(x);
                 continue;
@@ -84,9 +87,21 @@ public class Commit implements Serializable {
         }
     }
 
+//    public TreeMap<String,String> getBoldID(){
+//        Commit currentCommit = readObject(join(COMMIT,Head.currentCommit()),Commit.class);
+//        TreeMap<String,String> map = currentCommit.getBlobIDMap();
+//    }
+
+    public void logPrint(){
+        System.out.println("===");
+        System.out.println("commit " + this.getID());
+        System.out.println("Date: " + this.getDate());
+        System.out.println(this.getMessage());
+        System.out.println();
+    }
 
     public void save() {
-        File saveFile = join(Repository.COMMIT, this.CommitID);
+        File saveFile = join(COMMIT, this.CommitID);
         writeObject(saveFile,this);
     }
 
@@ -110,9 +125,6 @@ public class Commit implements Serializable {
     public String getMessage(){
         return this.message;
     }
-
-
-
 
 }
 

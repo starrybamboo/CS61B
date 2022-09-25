@@ -13,9 +13,11 @@ public class Branch implements Serializable {
     public Branch(String currentCommit,String branchName){
         this.pointer = currentCommit;
         this.branchName = branchName;
+        // Head is a branch and its name is current branch name so
+        // we just read it when it save it would save in that branch
     }
 
-    public String getPointer(){
+    public String currentCommitID(){
         return this.pointer;
     }
 
@@ -24,6 +26,27 @@ public class Branch implements Serializable {
         writeObject(saveFile,this);
         writeObject(Repository.HEAD,this);
     }
+
+    public void changeBranchName(String branchName){
+        // overwrite the branch name
+        this.branchName = branchName;
+        writeObject(Repository.HEAD,this);
+    }
+
+    public void changeCommitID(String commitID){
+        // overwrite the branch name
+        this.pointer = commitID;
+        File saveFile = join(Repository.GITLET_DIR,"REF",branchName);
+        writeObject(saveFile,this);
+        writeObject(Repository.HEAD,this);
+    }
+    public void changeCommitIDalone(String commitID){
+        // overwrite the branch name
+        this.pointer = commitID;
+        File saveFile = join(Repository.GITLET_DIR,"REF",branchName);
+        writeObject(saveFile,this);
+    }
+
 
     public Commit getCommit(){
         Commit currentCommit = readObject(join(COMMIT,this.pointer), Commit.class);
@@ -34,5 +57,4 @@ public class Branch implements Serializable {
         this.pointer = CommitID;
         this.save();
     }
-
 }

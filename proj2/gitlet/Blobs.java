@@ -16,6 +16,9 @@ public class Blobs implements Serializable{
         this.passCode = passcode;
         this.save();
     }
+    // version is save name
+    //File name is the file's name (what we read in the working directory)
+    //passCode is content
 
     public void save(){
         this.Version = sha1(this.FileName,this.passCode);

@@ -11,30 +11,29 @@ import static gitlet.Utils.readContents;
 public class Stage implements Serializable {
     public String name;
     public TreeMap<String,String> MAP;
-    public void save(){
-        File saveFile = join(Repository.STAGE,this.name);
-        writeObject(saveFile,this);
-    }
-
     Stage(String name){
         this.name = name;
         this.MAP = new TreeMap<String,String>();
     }
-
+    // name present the stage type
     public void addElement(String name, String currentVersion){
+        //if no previous version add
         if (!this.MAP.containsKey(name)){
                 this.MAP.put(name,currentVersion);
                 this.save();
-        }
-        String stageVersion = this.MAP.get(name);
-        if (!currentVersion.equals(stageVersion)){
-            this.MAP.remove(name);
-            this.MAP.put(name,currentVersion);
-            this.save();
+        }else {
+            //if version is not equal
+            String stageVersion = this.MAP.get(name);
+            if (!currentVersion.equals(stageVersion)) {
+                this.MAP.remove(name);
+                this.MAP.put(name, currentVersion);
+                this.save();
+            }
         }
     }
 
     public void removeElement(String name){
+        // if has name remove regardless of version
         if (this.MAP.get(name) != null){
             this.MAP.remove(name);
             this.save();
@@ -49,6 +48,12 @@ public class Stage implements Serializable {
     public Boolean containsKey(String FileName){
         return this.MAP.containsKey(FileName);
     }
+
+    public void save(){
+        File saveFile = join(Repository.STAGE,this.name);
+        writeObject(saveFile,this);
+    }
+}
 
 
 
@@ -131,5 +136,3 @@ public class Stage implements Serializable {
 //    static void clearRemove(){
 //        writeObject(join(GITLET_DIR,REMOVE),null);
 //    }
-
-}
