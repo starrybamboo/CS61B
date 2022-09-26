@@ -2,6 +2,7 @@ package gitlet;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.*;
 
 import static gitlet.Utils.*;
@@ -123,6 +124,7 @@ public class Repository {
     }
 
     static void commit(String msg){
+        if (msg.equals("")){exitWithMessage("Please enter a commit message.");}
 
         Branch Head = readObject(HEAD,Branch.class);
         Commit parents = Head.getCommit();
@@ -164,9 +166,21 @@ public class Repository {
 //        writeContents(join(CWD,FileName),file.getPasscode());
     }
 
+    static String helpFind(String CommitID){
+        List<String> finds = plainFilenamesIn(COMMIT);
+        for (String x : finds){
+            if ((x.substring(0,8)).equals(CommitID)){
+                return x;
+            }
+        }
+        return CommitID;
+    }
 
     public static void checkout(String CommitID,String FileName){
         //read the specific commitID get the commit
+        if (CommitID.length() == 8 ){
+            CommitID = helpFind(CommitID);
+        }
         CommitExit(CommitID);
         Commit currentCommit = readObject(join(COMMIT,CommitID),Commit.class);
         TreeMap<String,String> map = currentCommit.getBlobIDMap();
@@ -515,12 +529,11 @@ public class Repository {
         commit("Merged " + mergeBranchName +" into " + headBranch.getBranchName() + ".");
         Commit newCommit = Branch.getHeadCommit();
         newCommit.mergeParent(headCommit.getID(),mergeCommit.getID());
-        join(REF,mergeBranchName).delete();
         if (flag){
             System.out.println("Encountered a merge conflict.");
         }
-
         headBranch.changeCommitID(newCommit.getID());
+        join(REF,mergeBranchName).delete();
     }
 
     static void conflict(String x,String currentVersion ,String mergeVersion){

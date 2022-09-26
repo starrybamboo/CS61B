@@ -1,5 +1,8 @@
 package gitlet;
 
+import static gitlet.Utils.exitWithMessage;
+import static gitlet.Utils.join;
+
 /** Driver class for Gitlet, a subset of the Git version-control system.
  *  @author TODO
  */
@@ -15,7 +18,16 @@ public class Main {
             Utils.exitWithMessage("Please enter a command.");
         }
         String firstArg = args[0];
+        if (firstArg.equals("init")) {
+            judgeLength(1, args.length);
+            Repository.init();
+        }
+        if (!join(Repository.GITLET_DIR).exists()){
+            exitWithMessage("Not in an initialized Gitlet directory.");
+        }
         switch (firstArg) {
+            case "init":
+                break;
             case "merge" :
                 judgeLength(2,args.length);
                 Repository.merge(args[1]);
@@ -43,11 +55,7 @@ public class Main {
                 judgeLength(1,args.length);
                 Repository.globalLog();
                 break;
-            case "init":
-                judgeLength(1,args.length);
-                Repository.init();
-                // TODO: handle the `init` command
-                break;
+
             case "add":
                 judgeLength(2,args.length);
                 Repository.add(args[1]);
@@ -77,7 +85,7 @@ public class Main {
                 break;
             case "commit":
                 if (args.length != 2){
-                    Utils.exitWithMessage("Please enter a commit message.");
+                    Utils.exitWithMessage("Incorrect operands.");
                 }
                 Repository.commit(args[1]);
                 break;
