@@ -3,7 +3,7 @@ package gitlet;
 import java.io.File;
 import java.io.Serializable;
 
-import static gitlet.Repository.COMMIT;
+import static gitlet.Repository.*;
 import static gitlet.Utils.*;
 
 public class Branch implements Serializable {
@@ -21,16 +21,21 @@ public class Branch implements Serializable {
         return this.pointer;
     }
 
-    public void save(){
+    public void saveAndHead(){
         File saveFile = join(Repository.GITLET_DIR,"REF",this.branchName);
         writeObject(saveFile,this);
-        writeObject(Repository.HEAD,this);
+        writeObject(HEAD,this);
+    }
+
+    public void saveNoHead(){
+        File saveFile = join(Repository.GITLET_DIR,"REF",this.branchName);
+        writeObject(saveFile,this);
     }
 
     public void changeBranchName(String branchName){
         // overwrite the branch name
         this.branchName = branchName;
-        writeObject(Repository.HEAD,this);
+        writeObject(HEAD,this);
     }
 
     public void changeCommitID(String commitID){
@@ -38,7 +43,7 @@ public class Branch implements Serializable {
         this.pointer = commitID;
         File saveFile = join(Repository.GITLET_DIR,"REF",branchName);
         writeObject(saveFile,this);
-        writeObject(Repository.HEAD,this);
+        writeObject(HEAD,this);
     }
     public void changeCommitIDalone(String commitID){
         // overwrite the branch name
@@ -47,14 +52,24 @@ public class Branch implements Serializable {
         writeObject(saveFile,this);
     }
 
+    public String getBranchName(){return this.branchName;}
+    public void changePointer(String CommitID){
+        this.pointer = CommitID;
+        this.saveAndHead();
+    }
 
+    public static Branch getBranch(String branchName){
+        return readObject(join(REF,branchName),Branch.class);
+    }
     public Commit getCommit(){
         Commit currentCommit = readObject(join(COMMIT,this.pointer), Commit.class);
         return currentCommit;
     }
-    public String getBranchName(){return this.branchName;}
-    public void changePointer(String CommitID){
-        this.pointer = CommitID;
-        this.save();
+    public static Branch getHeadBranch(){
+        return readObject(HEAD,Branch.class);
+    }
+
+    public static Commit getHeadCommit(){
+        return readObject(HEAD,Branch.class).getCommit();
     }
 }

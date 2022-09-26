@@ -17,65 +17,62 @@ public class Main {
         String firstArg = args[0];
         switch (firstArg) {
             case "merge" :
-                if (!judgeLength(2,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(2,args.length);
                 Repository.merge(args[1]);
             case "branch" :
-                if (!judgeLength(2,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(2,args.length);
                 Repository.branch(args[1]);
                 break;
             case "reset" :
-                if (!judgeLength(2,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(2,args.length);
                 Repository.reset(args[1]);
                 break;
             case "rm-branch" :
-                if (!judgeLength(2,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(2,args.length);
                 Repository.rmBranch(args[1]);
                 break;
             case "status" :
-                if (!judgeLength(1,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(1,args.length);
                 Repository.status();
                 break;
             case "find" :
-                if (!judgeLength(2,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(2,args.length);
                 Repository.find(args[1]);
                 break;
             case "global-log":
-                if (!judgeLength(1,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(1,args.length);
                 Repository.globalLog();
                 break;
             case "init":
-                if (!judgeLength(1,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(1,args.length);
                 Repository.init();
                 // TODO: handle the `init` command
                 break;
             case "add":
-                if (!judgeLength(2,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(2,args.length);
                 Repository.add(args[1]);
                 // TODO: handle the `add [filename]` command
                 break;
             // TODO: FILL THE REST IN
             case "log":
-                if (!judgeLength(1,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(1,args.length);
                 Repository.log();
                 break;
             case "checkout":
-                if (judgeLength(2,args.length)||judgeLength(3,args.length)||
-                        judgeLength(4,args.length)) {
-                    if (args.length == 3) {
+                if (args.length == 3) {
                         Repository.checkout(args[2]);
-                    } else if (args.length == 4) {
-                        if (!args[2].equals("--")) {
-                            Utils.exitWithMessage("Incorrect operands.");
-                        }else{Repository.checkout(args[1], args[3]);}
-                    } else {
-                        Repository.checkoutBranch(args[1]);
-                    }
-                }else{
+                }else if (args.length == 4) {
+                    if (!args[2].equals("--")) {
+                        Utils.exitWithMessage("Incorrect operands.");
+                    }else{Repository.checkout(args[1], args[3]);}
+                } else if (args.length == 2) {
+                    Repository.checkoutBranch(args[1]);
+                } else{
                     Utils.exitWithMessage("Incorrect operands.");
                 }
                 break;
             case "rm":
-                if (!judgeLength(2,args.length)){Utils.exitWithMessage("Incorrect operands.");}
+                judgeLength(2,args.length);
                 Repository.remove(args[1]);
                 break;
             case "commit":
@@ -90,7 +87,9 @@ public class Main {
         }
     }
 
-    static boolean judgeLength(int correctLength,int argsLength){
-        return  correctLength == argsLength;
+    static void judgeLength(int correctLength,int argsLength){
+        if (correctLength != argsLength){
+            Utils.exitWithMessage("Incorrect operands.");
+        }
     }
 }

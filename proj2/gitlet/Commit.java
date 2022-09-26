@@ -33,14 +33,14 @@ public class Commit implements Serializable {
      */
     private String message;
     private Date timestamp;
-    public List<String> parent;
+    public ArrayList<String> parent;
     private String CommitID;
     private TreeMap<String,String> BlobIDMap;
 
     public Commit() {
         this.timestamp = new Date(0);
         this.message = "initial commit";
-        this.parent = new ArrayList<>();
+        this.parent = new ArrayList<>(2);
         this.BlobIDMap = new TreeMap<String,String>();
         this.CommitID = sha1(dateToTimeStamp(timestamp),message);
         File saveFile = join(COMMIT, this.CommitID);
@@ -62,6 +62,7 @@ public class Commit implements Serializable {
         return dateFormat.format(date);
     }
 
+    // it not only could use in MAPad and MAPrm but also could make it in conflict
     public void updateMap(TreeMap<String,String> MAPad,TreeMap<String,String> MAPrm){
         for(String x: MAPad.keySet() ){
             // if there is no file add
@@ -92,18 +93,29 @@ public class Commit implements Serializable {
 //        TreeMap<String,String> map = currentCommit.getBlobIDMap();
 //    }
 
+    public void addParent(String parentName){
+        this.parent.add(parentName);
+    }
+
+
+
     public void logPrint(){
         System.out.println("===");
         System.out.println("commit " + this.getID());
+        if (this.parent.size() == 2 && this.parent.get(0) != null && this.parent.get(1) != null){
+            System.out.println("Merge: " + this.parent.get(0).substring(0,8) + " " + this.parent.get(1).substring(0,8));
+        }
         System.out.println("Date: " + this.getDate());
         System.out.println(this.getMessage());
         System.out.println();
     }
 
+
     public void save() {
         File saveFile = join(COMMIT, this.CommitID);
         writeObject(saveFile,this);
     }
+
 
     public String getID(){
         return this.CommitID;
@@ -124,6 +136,20 @@ public class Commit implements Serializable {
 
     public String getMessage(){
         return this.message;
+    }
+
+    public ArrayList<String> getParentList(){
+        return this.parent;
+    }
+    public void removeParent(){
+        this.parent.remove(0);
+    }
+
+    public void mergeParent(String parent1 ,String parent2){
+        this.parent.remove(0);
+        this.parent.add(parent1);
+        this.parent.add(parent2);
+        this.save();
     }
 
 }
@@ -173,6 +199,3 @@ public class Commit implements Serializable {
 //    }
 
 
-
-
-    /* TODO: fill in the rest of this class. */
