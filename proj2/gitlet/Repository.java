@@ -441,11 +441,13 @@ public class Repository {
         Boolean flag = false;
         Stage addStage = readObject(STAGEAD, Stage.class);
         Stage removeStage = readObject(STAGERM, Stage.class);
+
         if (!addStage.MAP.isEmpty() || !removeStage.MAP.isEmpty()) {
             exitWithMessage("You have uncommitted changes.");
         }
         BranchExit(mergeBranchName);
         Branch headBranch = Branch.getHeadBranch();
+        Branch mergeBranchBackUp = readObject(join(REF, mergeBranchName), Branch.class);
         Branch mergeBranch = readObject(join(REF, mergeBranchName), Branch.class);
         if (headBranch.getBranchName().equals(mergeBranch.getBranchName())) {
             exitWithMessage("cannot merge a branch with itself.");
@@ -482,6 +484,7 @@ public class Repository {
             checkout(headCommit.getID(),x);
             add(x);
         }
+
         for (String x : mergeSet){
             String splitVersion = splitMap.get(x);
             String currentVersion = currentFileMap.get(x);
@@ -506,11 +509,11 @@ public class Repository {
                 if (currentVersion == null){
                     checkout(mergeCommit.getID(), x);
                     add(x);
-                } else if(!mergeVersion.equals(currentVersion) && !currentVersion.equals(splitVersion)){
+                } else if(!mergeVersion.equals(currentVersion) && !currentVersion.equals(splitVersion) && !mergeVersion.equals(splitVersion)){
                     conflict(x, currentVersion, mergeVersion);
                     conflictSet.add(x);
                     flag = true;
-                }else {
+                }else if (!mergeVersion.equals(splitVersion)){
                     checkout(mergeCommit.getID(), x);
                     add(x);
                 }
@@ -518,7 +521,7 @@ public class Repository {
         }
 
         for (String x : splitSet){
-            if ((!headSet.contains(x) || ! mergeSet.contains(x) )&& !conflictSet.contains(x)){
+            if (!headSet.contains(x) || ! mergeSet.contains(x)){
                 remove(x);
                 if (headSet.contains(x)){
                     remove(x);
@@ -533,6 +536,7 @@ public class Repository {
             System.out.println("Encountered a merge conflict.");
         }
         headBranch.changeCommitID(newCommit.getID());
+        mergeBranchBackUp.saveNoHead();
         join(REF,mergeBranchName).delete();
     }
 
