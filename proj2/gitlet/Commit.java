@@ -103,7 +103,7 @@ public class Commit implements Serializable {
         System.out.println("===");
         System.out.println("commit " + this.getID());
         if (this.parent.size() == 2 && this.parent.get(0) != null && this.parent.get(1) != null){
-            System.out.println("Merge: " + this.parent.get(0).substring(0,8) + " " + this.parent.get(1).substring(0,8));
+            System.out.println("Merge: " + this.parent.get(0).substring(0,7) + " " + this.parent.get(1).substring(0,7));
         }
         System.out.println("Date: " + this.getDate());
         System.out.println(this.getMessage());

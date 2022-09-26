@@ -462,7 +462,7 @@ public class Repository {
         //find split point
         Commit splitCommit = findSplit(headCommit, mergeCommit);
         if (splitCommit.getID().equals(headCommit.getID())){
-            checkout(mergeBranchName);
+            checkoutBranch(mergeBranchName);
             exitWithMessage("Current branch fast-forwarded.");
         }
         if (splitCommit.getID().equals(mergeCommit.getID())){
@@ -481,8 +481,14 @@ public class Repository {
         Set<String> conflictSet = new HashSet<String>();
 
         for (String x : headSet){
-            checkout(headCommit.getID(),x);
-            add(x);
+            if (!mergeSet.contains(x) && splitMap.get(x) != null && !currentFileMap.get(x).equals(splitMap.get(x))) {
+                conflictEmpty(x, currentFileMap.get(x));
+                conflictSet.add(x);
+                flag = true;
+            } else {
+                checkout(headCommit.getID(),x);
+                add(x);
+            }
         }
 
         for (String x : mergeSet){
@@ -506,7 +512,12 @@ public class Repository {
                     add(x);
                 }
             }else{
-                if (currentVersion == null){
+                if (currentVersion == null && !mergeVersion.equals(splitVersion)){
+                    conflictEmpty(x,mergeVersion);
+                    conflictSet.add(x);
+                    flag = true;
+                }
+                else if (currentVersion == null){
                     checkout(mergeCommit.getID(), x);
                     add(x);
                 } else if(!mergeVersion.equals(currentVersion) && !currentVersion.equals(splitVersion) && !mergeVersion.equals(splitVersion)){
@@ -521,7 +532,7 @@ public class Repository {
         }
 
         for (String x : splitSet){
-            if (!headSet.contains(x) || ! mergeSet.contains(x)){
+            if ((!headSet.contains(x) || ! mergeSet.contains(x)) && !conflictSet.contains(x)){
                 remove(x);
                 if (headSet.contains(x)){
                     remove(x);
@@ -538,6 +549,16 @@ public class Repository {
         headBranch.changeCommitID(newCommit.getID());
         mergeBranchBackUp.saveNoHead();
         join(REF,mergeBranchName).delete();
+    }
+    static void conflictEmpty(String x,String currentVersion ){
+        Blobs head = readObject(join(BLOBS,currentVersion),Blobs.class);
+
+
+        String newContent = "<<<<<<< HEAD\n" + new String(head.getPasscode()) + "=======\n" +
+                ">>>>>>>\n";
+        Blobs blobs = new Blobs(x,newContent.getBytes(StandardCharsets.UTF_8));
+        blobs.save();
+        writeContents(join(CWD,x),newContent);
     }
 
     static void conflict(String x,String currentVersion ,String mergeVersion){
