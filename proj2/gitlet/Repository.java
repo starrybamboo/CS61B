@@ -437,6 +437,9 @@ public class Repository {
     // nothing change stay
     //if they do same thing(remove or add the same file) ,stay that
     static void merge(String mergeBranchName) {
+        if (!join(REF,mergeBranchName).exists()){
+            exitWithMessage("A branch with that name does not exist.");
+        }
 
         Boolean flag = false;
         Stage addStage = readObject(STAGEAD, Stage.class);
