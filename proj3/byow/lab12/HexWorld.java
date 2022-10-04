@@ -24,7 +24,7 @@ public class HexWorld {
 
 
     public static void main(String[] args){
-        int size = Integer.valueOf(args[0]);
+        int size = 4;
         TERenderer hexRender = new TERenderer();
         hexRender.initialize(WIDTH,HEIGHT);
         TETile[][] world = new TETile[WIDTH][HEIGHT];
@@ -105,8 +105,4 @@ public class HexWorld {
                 break;
         }
     }
-
-
-
-
 }
