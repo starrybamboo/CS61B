@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class Engine {
 
-    TERenderer ter = new TERenderer();
+//    TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
     public static final int HEIGHT = 30;
@@ -54,7 +54,7 @@ public class Engine {
             return null;
         }
         final long SEED = analyse(input);
-        ter.initialize(WIDTH, HEIGHT);
+//        ter.initialize(WIDTH, HEIGHT);
         TETile[][] finalWorldFrame = new TETile[WIDTH][HEIGHT];
 
         for (int x = 0; x < WIDTH; x += 1) {
@@ -63,7 +63,7 @@ public class Engine {
             }
         }
 
-        int roomNumber = new Random(SEED).nextInt(6) + 2;
+        int roomNumber = new Random(SEED).nextInt(20) + 10;
         Room[] room = new Room[roomNumber];
         generateRoom(room, SEED);
         // get room
@@ -171,8 +171,14 @@ public class Engine {
 //                return true;
 //            }
 //            return false;
-            return (this.end_x + 2 > other.get_x() && this.end_y + 2 > this.get_y() &&
-                    this.start_x - 2 < other.get_x() && this.start_y - 2 < other.get_y());
+            if(this.end_x + 2 > other.get_x() && this.start_x - 2 < other.get_x() &&
+                            this.start_y - 2 < other.getEnd_y() && this.end_y + 2 > other.getEnd_y()){
+                return true;
+            }
+//            if (this.end_y + 2 > this.get_y() && this.start_y - 2 < other.get_y()){
+//                return true;
+//            }
+            return false;
         }
 
         public void paveRoom(TETile[][] world){
