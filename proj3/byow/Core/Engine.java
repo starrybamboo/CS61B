@@ -71,7 +71,7 @@ public class Engine {
         eliminateRoom(room);
         buildRoom(room,finalWorldFrame);
         connectRoom(room,finalWorldFrame);
-        ter.renderFrame(finalWorldFrame);
+//        ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
 
