@@ -49,6 +49,7 @@ public class Engine {
         //
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
+        input = input.toUpperCase();
         if (!input.contains("N") || !input.contains("S")){
             return null;
         }
