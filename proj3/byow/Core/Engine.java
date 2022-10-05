@@ -15,7 +15,7 @@ import static byow.Core.Utils.*;
 public class Engine implements Serializable {
 
     TETile[][] finalWorldFrame;
-    TERenderer ter = new TERenderer();
+//    TERenderer ter = new TERenderer();
     int avatar_x;
     int avatar_y;
     Random rand;
@@ -128,7 +128,7 @@ public class Engine implements Serializable {
     public boolean judge(int x,int y){
         if (!finalWorldFrame[x][y].description().equals(Tileset.WALL.description())){
             move(x,y);
-            ter.renderFrame(finalWorldFrame);
+//            ter.renderFrame(finalWorldFrame);
             return true;
         }return false;
     }
@@ -145,7 +145,7 @@ public class Engine implements Serializable {
             for (int j = 1; j < HEIGHT ; j ++){
                 if (finalWorldFrame[i][j] == Tileset.FLOOR) {
                     finalWorldFrame[i][j] = Tileset.AVATAR;
-                    ter.renderFrame(finalWorldFrame);
+//                    ter.renderFrame(finalWorldFrame);
                     this.avatar_x = i;
                     this.avatar_y = j;
                     return ;
@@ -222,7 +222,7 @@ public class Engine implements Serializable {
 //        StdDraw.enableDoubleBuffering();
 //        StdDraw.setPenColor(Color.WHITE);
         interactWithInputString(a.userInput);
-        this.ter = a.ter;
+//        this.ter = a.ter;
         this.userInput = a.userInput;
         this.avatar_y = a.avatar_y;
         this.avatar_x = a.avatar_x;
@@ -264,7 +264,7 @@ public class Engine implements Serializable {
             return null;
         }
         final long SEED = analyse(input);
-        ter.initialize(WIDTH, HEIGHT);
+//        ter.initialize(WIDTH, HEIGHT);
         this.finalWorldFrame = new TETile[WIDTH][HEIGHT];
 
         for (int x = 0; x < WIDTH; x += 1) {
@@ -302,7 +302,7 @@ public class Engine implements Serializable {
                         break;
                 }
             }
-        ter.renderFrame(finalWorldFrame);
+//        ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
 
