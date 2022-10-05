@@ -209,7 +209,16 @@ public class Engine implements Serializable {
         }
         this.userInput = this.userInput.substring(0,this.userInput.length()-2);
         File saveFile = join(CWD,"saveworld.txt");
-        writeObject(saveFile,this);
+        if (saveFile.exists()) {
+            writeObject(saveFile, this);
+        }else {
+            try{
+                saveFile.createNewFile();
+            }catch (IOException e){
+                
+            }
+            writeObject(saveFile,this);
+        }
     }
 
     public void load(){
