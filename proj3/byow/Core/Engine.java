@@ -215,7 +215,7 @@ public class Engine implements Serializable {
             try{
                 saveFile.createNewFile();
             }catch (IOException e){
-                
+
             }
             writeObject(saveFile,this);
         }
@@ -223,6 +223,9 @@ public class Engine implements Serializable {
 
     public void load(){
         File saveFile = join(CWD,"saveworld.txt");
+        if (!saveFile.exists()){
+            return;
+        }
         Engine a = readObject(saveFile,Engine.class);
 
 //        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
@@ -273,8 +276,8 @@ public class Engine implements Serializable {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
         input = input.toUpperCase();
-
-        if (input.contains("l") || input.contains("L")){
+        File saveFile = join(CWD,"saveworld.txt");
+        if (input.contains("L") && saveFile.exists()){
             load();
             generateUser();
             boolean flag = false;
