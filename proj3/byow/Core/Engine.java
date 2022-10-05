@@ -204,6 +204,9 @@ public class Engine implements Serializable {
 //    }
 
     public void save(){
+        if (this.userInput.equals(":q")|| this.userInput.equals(";Q") || this.userInput == null){
+            return;
+        }
         File saveFile = join(CWD,"saveworld.txt");
         writeObject(saveFile,this);
     }
