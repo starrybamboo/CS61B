@@ -263,6 +263,31 @@ public class Engine implements Serializable {
         // See proj3.byow.InputDemo for a demo of how you can make a nice clean interface
         // that works for many different input types.
         input = input.toUpperCase();
+
+        if (input.contains("l") || input.contains("L")){
+            generateUser();
+            for (int i = input.indexOf("s") + 1; i < input.length()-2;i++){
+                char s = input.charAt(i);
+                switch (s){
+                    case 'W':
+                        judge(avatar_x, avatar_y + 1);
+                        break;
+                    case 'A':
+                        judge(avatar_x - 1, avatar_y);
+                        break;
+                    case 'S':
+                        judge(avatar_x, avatar_y - 1);
+                        break;
+                    case 'D':
+                        judge(avatar_x + 1, avatar_y);
+                        break;
+                    case 'L':
+                        load();
+                        break;
+                }
+            }
+            return finalWorldFrame;
+        }
         if (!input.contains("N") || !input.contains("S")){
             return null;
         }
@@ -284,27 +309,7 @@ public class Engine implements Serializable {
         eliminateRoom(room);
         buildRoom(room,finalWorldFrame);
         connectRoom(room,finalWorldFrame);
-        generateUser();
-        for (int i = input.indexOf("s") + 1; i < input.length()-2;i++){
-                char s = input.charAt(i);
-                switch (s){
-                    case 'W':
-                        judge(avatar_x, avatar_y + 1);
-                        break;
-                    case 'A':
-                        judge(avatar_x - 1, avatar_y);
-                        break;
-                    case 'S':
-                        judge(avatar_x, avatar_y - 1);
-                        break;
-                    case 'D':
-                        judge(avatar_x + 1, avatar_y);
-                        break;
-                    case 'L':
-                        load();
-                        break;
-                }
-            }
+
 //        ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
