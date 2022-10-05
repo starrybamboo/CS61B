@@ -1,9 +1,12 @@
 package byow.TileEngine;
 
+import byow.Core.Engine;
 import edu.princeton.cs.introcs.StdDraw;
+import org.apache.commons.math3.analysis.function.Expm1;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.Serializable;
 
 /**
  * Utility class for rendering tiles. You do not need to modify this file. You're welcome
@@ -11,7 +14,7 @@ import java.awt.Font;
  * messing with this renderer, unless you're trying to do something fancy like
  * allowing scrolling of the screen or tracking the avatar or something similar.
  */
-public class TERenderer {
+public class TERenderer implements Serializable {
     private static final int TILE_SIZE = 16;
     private int width;
     private int height;
@@ -96,6 +99,25 @@ public class TERenderer {
                 world[x][y].draw(x + xOffset, y + yOffset);
             }
         }
+        StdDraw.show();
+    }
+
+    public void renderFrame(TETile[][] world, String message) {
+        int numXTiles = world.length;
+        int numYTiles = world[0].length;
+        StdDraw.clear(new Color(0, 0, 0));
+        for (int x = 0; x < numXTiles; x += 1) {
+            for (int y = 0; y < numYTiles; y += 1) {
+                if (world[x][y] == null) {
+                    throw new IllegalArgumentException("Tile at position x=" + x + ", y=" + y
+                            + " is null.");
+                }
+                StdDraw.setPenColor(StdDraw.WHITE);
+                world[x][y].draw(x + xOffset, y + yOffset);
+            }
+        }
+        StdDraw.setPenColor(Color.WHITE);
+        StdDraw.text(2,Engine.HEIGHT - 2, message);
         StdDraw.show();
     }
 }
