@@ -207,6 +207,7 @@ public class Engine implements Serializable {
         if (this.userInput.equals(":q")|| this.userInput.equals(";Q") || this.userInput == null){
             return;
         }
+        this.userInput = this.userInput.substring(0,this.userInput.length()-2);
         File saveFile = join(CWD,"saveworld.txt");
         writeObject(saveFile,this);
     }
@@ -265,9 +266,21 @@ public class Engine implements Serializable {
         input = input.toUpperCase();
 
         if (input.contains("l") || input.contains("L")){
+            load();
             generateUser();
-            for (int i = input.indexOf("s") + 1; i < input.length()-2;i++){
+            boolean flag = false;
+            for (int i = input.indexOf("S") + 1; i < input.length();i++){
                 char s = input.charAt(i);
+                if (flag){
+                    if (s =='Q' || s == 'q'){
+                        this.save();
+                    }
+                }
+                if (s == ':'){
+                    flag = true;
+                    continue;
+                }
+                flag = false;
                 switch (s){
                     case 'W':
                         judge(avatar_x, avatar_y + 1);
@@ -281,12 +294,12 @@ public class Engine implements Serializable {
                     case 'D':
                         judge(avatar_x + 1, avatar_y);
                         break;
-                    case 'L':
-                        load();
-                        break;
+//                    case 'L':
+//                        load();
+//                        break;
                 }
             }
-            return finalWorldFrame;
+            return this.finalWorldFrame;
         }
         if (!input.contains("N") || !input.contains("S")){
             return null;
@@ -297,7 +310,7 @@ public class Engine implements Serializable {
 
         for (int x = 0; x < WIDTH; x += 1) {
             for (int y = 0; y < HEIGHT; y += 1) {
-                finalWorldFrame[x][y] = Tileset.NOTHING;
+                this.finalWorldFrame[x][y] = Tileset.NOTHING;
             }
         }
         this.rand = new Random(SEED);
@@ -311,7 +324,7 @@ public class Engine implements Serializable {
         connectRoom(room,finalWorldFrame);
 
 //        ter.renderFrame(finalWorldFrame);
-        return finalWorldFrame;
+        return this.finalWorldFrame;
     }
 
     private long analyse(String input){
