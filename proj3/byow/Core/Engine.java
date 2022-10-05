@@ -3,7 +3,7 @@ package byow.Core;
 import byow.TileEngine.TERenderer;
 import byow.TileEngine.TETile;
 import byow.TileEngine.Tileset;
-import edu.princeton.cs.introcs.StdDraw;
+//import edu.princeton.cs.introcs.StdDraw;
 
 import java.awt.*;
 import java.io.*;
@@ -30,86 +30,61 @@ public class Engine implements Serializable {
      * Method used for exploring a fresh world. This method should handle all inputs,
      * including inputs from the main menu.
      */
-    public void interactWithKeyboard() {
-        startUI();
-        StdDraw.show();
-        this.userInput = solicitNCharsInput();
-        generateUser();
-        StartGame();
-    }
+//    public void interactWithKeyboard() {
+//        startUI();
+//        StdDraw.show();
+//        this.userInput = solicitNCharsInput();
+//        generateUser();
+//        StartGame();
+//    }
 
-    public void StartGame(){
-        boolean flag = false;
-//        generateHelp();
-        while (true) {
-            if (StdDraw.hasNextKeyTyped()){
-                char input = StdDraw.nextKeyTyped();
-                this.userInput += input;
-                if (flag){
-                    if (input =='Q' || input == 'q'){
-                        this.save();
-                    }
-                }
-                if (input == ':'){
-                    flag = true;
-                    continue;
-                }
-                switch (input){
-                    case 'W':
-                        judge(avatar_x, avatar_y + 1);
-                        break;
-                    case 'A':
-                        judge(avatar_x - 1, avatar_y);
-                        break;
-                    case 'S':
-                        judge(avatar_x, avatar_y - 1);
-                        break;
-                    case 'D':
-                        judge(avatar_x + 1, avatar_y);
-                        break;
-                    case 'L':
-                        load();
-                        break;
-                }
-            }
-            if (StdDraw.mouseX() >= WIDTH || StdDraw.mouseX() < 0){continue;}
-            if (StdDraw.mouseY() >= HEIGHT || StdDraw.mouseY() < 0){continue;}
-//            finalWorldFrame[(int)StdDraw.mouseX()][(int)StdDraw.mouseY()].description()
-            ter.renderFrame(finalWorldFrame,finalWorldFrame[(int)StdDraw.mouseX()][(int)StdDraw.mouseY()].description());
-            StdDraw.pause(10);
-        }
-    }
+//    public void StartGame(){
+//        boolean flag = false;
+////        generateHelp();
+//        while (true) {
+//            if (StdDraw.hasNextKeyTyped()){
+//                char input = StdDraw.nextKeyTyped();
+//                this.userInput += input;
+//                if (flag){
+//                    if (input =='Q' || input == 'q'){
+//                        this.save();
+//                    }
+//                }
+//                if (input == ':'){
+//                    flag = true;
+//                    continue;
+//                }
+//                switch (input){
+//                    case 'W':
+//                        judge(avatar_x, avatar_y + 1);
+//                        break;
+//                    case 'A':
+//                        judge(avatar_x - 1, avatar_y);
+//                        break;
+//                    case 'S':
+//                        judge(avatar_x, avatar_y - 1);
+//                        break;
+//                    case 'D':
+//                        judge(avatar_x + 1, avatar_y);
+//                        break;
+//                    case 'L':
+//                        load();
+//                        break;
+//                }
+//            }
+//            if (StdDraw.mouseX() >= WIDTH || StdDraw.mouseX() < 0){continue;}
+//            if (StdDraw.mouseY() >= HEIGHT || StdDraw.mouseY() < 0){continue;}
+////            finalWorldFrame[(int)StdDraw.mouseX()][(int)StdDraw.mouseY()].description()
+//            ter.renderFrame(finalWorldFrame,finalWorldFrame[(int)StdDraw.mouseX()][(int)StdDraw.mouseY()].description());
+//            StdDraw.pause(10);
+//        }
+//    }
 
 //    public void generateHelp(){
 //
 //    }
 
-    public void save(){
-        File saveFile = join(CWD,"saveworld.txt");
-        writeObject(saveFile,this);
-    }
 
-    public void load(){
-        File saveFile = join(CWD,"saveworld.txt");
-        Engine a = readObject(saveFile,Engine.class);
-
-        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
-        Font font = new Font("Monaco", Font.BOLD, 30);
-        StdDraw.setFont(font);
-        StdDraw.setXscale(0, WIDTH);
-        StdDraw.setYscale(0, HEIGHT);
-
-        StdDraw.clear(Color.BLACK);
-        StdDraw.enableDoubleBuffering();
-        StdDraw.setPenColor(Color.WHITE);
-        interactWithInputString(a.userInput);
-        this.ter = a.ter;
-        this.userInput = a.userInput;
-        this.avatar_y = a.avatar_y;
-        this.avatar_x = a.avatar_x;
-        this.finalWorldFrame = a.finalWorldFrame;
-        this.StartGame();
-    }
 
 
 //    private void save() {
@@ -179,54 +154,80 @@ public class Engine implements Serializable {
         }
     }
 
-    public void startUI(){
-        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
-        Font font = new Font("Monaco", Font.BOLD, 30);
-        StdDraw.setFont(font);
-        StdDraw.setXscale(0, WIDTH);
-        StdDraw.setYscale(0, HEIGHT);
+//    public void startUI(){
+//        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
+//        Font font = new Font("Monaco", Font.BOLD, 30);
+//        StdDraw.setFont(font);
+//        StdDraw.setXscale(0, WIDTH);
+//        StdDraw.setYscale(0, HEIGHT);
+//
+//        StdDraw.clear(Color.BLACK);
+//        StdDraw.enableDoubleBuffering();
+//        StdDraw.setPenColor(Color.WHITE);
+//
+//        StdDraw.text(WIDTH/2, HEIGHT/2 + 10, "CS61B");
+//        StdDraw.text(WIDTH/2, HEIGHT/2, "Press L to load a game!(if you save.)");
+//        StdDraw.text(WIDTH/2, HEIGHT/2 - 10, "Type N###S to create a new world!");
+//
+//    }
+//
+//    public String solicitNCharsInput() {
+//        //TODO: Read n letters of player input
+//        int i = 0;
+//        String tmp = "";
+//        boolean flag = false;
+//        while (true){
+//            if (StdDraw.hasNextKeyTyped()){
+//                char s = StdDraw.nextKeyTyped();
+//                if (s == 'n' || s == 'N'){
+//                    flag = true;
+//                }
+//                if (s == 'l' || s == 'L'){
+//                    load();
+//                }
+//                if (flag){
+//                    tmp += s;
+//                    if (s == 's' || s == 'S'){
+//                        StdDraw.clear(StdDraw.BLACK);
+//                        interactWithInputString(tmp);
+//                        return tmp;
+//                    }
+//                    StdDraw.clear(StdDraw.BLACK);
+//                    StdDraw.text(WIDTH/2, HEIGHT/2 - 5, tmp);
+//                    StdDraw.text(WIDTH/2, HEIGHT/2 + 10, "CS61B");
+//                    StdDraw.text(WIDTH/2, HEIGHT/2, "Press L to load a game!(if you save.)");
+//                    StdDraw.text(WIDTH/2, HEIGHT/2 - 10, "Type N###S to create a new world!");
+//                    StdDraw.show();
+//                }
+//            }
+//        }
+//    }
 
-        StdDraw.clear(Color.BLACK);
-        StdDraw.enableDoubleBuffering();
-        StdDraw.setPenColor(Color.WHITE);
-
-        StdDraw.text(WIDTH/2, HEIGHT/2 + 10, "CS61B");
-        StdDraw.text(WIDTH/2, HEIGHT/2, "Press L to load a game!(if you save.)");
-        StdDraw.text(WIDTH/2, HEIGHT/2 - 10, "Type N###S to create a new world!");
-
+    public void save(){
+        File saveFile = join(CWD,"saveworld.txt");
+        writeObject(saveFile,this);
     }
 
-    public String solicitNCharsInput() {
-        //TODO: Read n letters of player input
-        int i = 0;
-        String tmp = "";
-        boolean flag = false;
-        while (true){
-            if (StdDraw.hasNextKeyTyped()){
-                char s = StdDraw.nextKeyTyped();
-                if (s == 'n' || s == 'N'){
-                    flag = true;
-                }
-                if (s == 'l' || s == 'L'){
-                    load();
-                }
-                if (flag){
-                    tmp += s;
-                    if (s == 's' || s == 'S'){
-                        StdDraw.clear(StdDraw.BLACK);
-                        interactWithInputString(tmp);
-                        return tmp;
-                    }
-                    StdDraw.clear(StdDraw.BLACK);
-                    StdDraw.text(WIDTH/2, HEIGHT/2 - 5, tmp);
-                    StdDraw.text(WIDTH/2, HEIGHT/2 + 10, "CS61B");
-                    StdDraw.text(WIDTH/2, HEIGHT/2, "Press L to load a game!(if you save.)");
-                    StdDraw.text(WIDTH/2, HEIGHT/2 - 10, "Type N###S to create a new world!");
-//                    startUI();
-                    StdDraw.show();
-                }
-            }
-        }
+    public void load(){
+        File saveFile = join(CWD,"saveworld.txt");
+        Engine a = readObject(saveFile,Engine.class);
+
+//        StdDraw.setCanvasSize(WIDTH * 16, HEIGHT * 16);
+//        Font font = new Font("Monaco", Font.BOLD, 30);
+//        StdDraw.setFont(font);
+//        StdDraw.setXscale(0, WIDTH);
+//        StdDraw.setYscale(0, HEIGHT);
+//
+//        StdDraw.clear(Color.BLACK);
+//        StdDraw.enableDoubleBuffering();
+//        StdDraw.setPenColor(Color.WHITE);
+        interactWithInputString(a.userInput);
+        this.ter = a.ter;
+        this.userInput = a.userInput;
+        this.avatar_y = a.avatar_y;
+        this.avatar_x = a.avatar_x;
+        this.finalWorldFrame = a.finalWorldFrame;
+//        this.StartGame();
     }
 
     /**
@@ -280,6 +281,27 @@ public class Engine implements Serializable {
         eliminateRoom(room);
         buildRoom(room,finalWorldFrame);
         connectRoom(room,finalWorldFrame);
+        generateUser();
+        for (int i = input.indexOf("s") + 1; i < input.length()-2;i++){
+                char s = input.charAt(i);
+                switch (s){
+                    case 'W':
+                        judge(avatar_x, avatar_y + 1);
+                        break;
+                    case 'A':
+                        judge(avatar_x - 1, avatar_y);
+                        break;
+                    case 'S':
+                        judge(avatar_x, avatar_y - 1);
+                        break;
+                    case 'D':
+                        judge(avatar_x + 1, avatar_y);
+                        break;
+                    case 'L':
+                        load();
+                        break;
+                }
+            }
         ter.renderFrame(finalWorldFrame);
         return finalWorldFrame;
     }
